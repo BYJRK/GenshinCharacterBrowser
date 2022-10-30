@@ -20,7 +20,10 @@ public partial class MainWindowViewModel : ObservableObject
     Character selectedItem;
 
     [ObservableProperty]
-    BitmapImage backgroundImage;
+    BitmapImage dawnImage;
+
+    [ObservableProperty]
+    BitmapImage duskImage;
 
     [RelayCommand]
     async Task LoadCity(string id)
@@ -32,15 +35,7 @@ public partial class MainWindowViewModel : ObservableObject
         CharList.Clear();
         foreach (var item in list)
         {
-            CharList.Add(new Character
-            {
-                Name = item["title"].ToString(),
-                IconUrl = item["ext"].First(v => v["arrtName"].ToString() == "角色-ICON")["value"][0]["url"].ToString(),
-                ProtraitUrl = item["ext"].First(v => v["arrtName"].ToString() == "角色-PC端主图")["value"][0]["url"].ToString(),
-                NameUrl = item["ext"].First(v => v["arrtName"].ToString() == "角色-名字")["value"][0]["url"].ToString(),
-                ElementUrl = item["ext"].First(v => v["arrtName"].ToString() == "角色-属性")["value"][0]["url"].ToString(),
-                DialogueUrl = item["ext"].First(v => v["arrtName"].ToString() == "角色-台词")["value"][0]["url"].ToString()
-            });
+            CharList.Add(new(item));
         }
 
         SelectedItem = CharList[0];
@@ -50,7 +45,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     async Task ChangeBg(string id)
     {
-        var backgroundUrl = id switch
+        var dawnUrl = id switch
         {
             "150" => @"https://uploadstatic.mihoyo.com/contentweb/20200211/2020021114220951905.jpg",
             "151" => @"https://uploadstatic.mihoyo.com/contentweb/20200515/2020051511073340128.jpg",
@@ -59,8 +54,20 @@ public partial class MainWindowViewModel : ObservableObject
             _ => throw new ArgumentException(id)
         };
 
-        var image = await HttpHelper.GetImageAsync(backgroundUrl);
+        var duskUrl = id switch
+        {
+            "150" => @"https://uploadstatic.mihoyo.com/contentweb/20200211/2020021114221470532.jpg",
+            "151" => @"https://uploadstatic.mihoyo.com/contentweb/20200515/2020051511072867344.jpg",
+            "324" => @"https://uploadstatic.mihoyo.com/contentweb/20210719/2021071917033032133.jpg",
+            "350" => @"https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/ab72edd8acc105904aa50da90e4e788e_2299455865599609620.jpg",
+            _ => throw new ArgumentException(id)
+        };
 
-        BackgroundImage = image;
+        var dawn = HttpHelper.GetImageAsync(dawnUrl);
+        var dusk = HttpHelper.GetImageAsync(duskUrl);
+        await Task.WhenAll(dawn, dusk);
+
+        DawnImage = dawn.Result;
+        DuskImage = dusk.Result;
     }
 }

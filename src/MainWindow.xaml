@@ -54,15 +54,11 @@
         </MediaElement>
 
         <!-- 背景图片 -->
-        <Image Grid.RowSpan="2"
-               d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/ab72edd8acc105904aa50da90e4e788e_2299455865599609620.jpg"
-               Source="{Binding BackgroundImage}"
-               RenderTransformOrigin="0.5,0.5"
-               Stretch="UniformToFill">
-            <Image.RenderTransform>
+        <Grid Grid.RowSpan="2" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
                 <ScaleTransform />
-            </Image.RenderTransform>
-            <Image.Triggers>
+            </Grid.RenderTransform>
+            <Grid.Triggers>
                 <EventTrigger RoutedEvent="Loaded">
                     <BeginStoryboard>
                         <Storyboard>
@@ -81,8 +77,34 @@
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
-            </Image.Triggers>
-        </Image>
+            </Grid.Triggers>
+            <Image d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/ab72edd8acc105904aa50da90e4e788e_2299455865599609620.jpg" Source="{Binding DuskImage}" Stretch="UniformToFill">
+            </Image>
+
+            <Image Grid.RowSpan="2"
+                   d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/04d542b08cdee91e5dabfa0e85b8995e_8653892990016707198.jpg"
+                   Source="{Binding DawnImage}"
+                   RenderTransformOrigin="0.5,0.5"
+                   Stretch="UniformToFill">
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimationUsingKeyFrames RepeatBehavior="Forever"
+                                                               AutoReverse="True"
+                                                               Storyboard.TargetProperty="Opacity"
+                                                               Duration="0:0:20">
+                                    <LinearDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                                    <LinearDoubleKeyFrame KeyTime="0:0:8" Value="1" />
+                                    <LinearDoubleKeyFrame KeyTime="0:0:12" Value="0" />
+                                    <LinearDoubleKeyFrame KeyTime="0:0:20" Value="0" />
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+        </Grid>
 
         <!-- 音量按钮 -->
         <ToggleButton x:Name="bgm"
