@@ -41,6 +41,18 @@
             <RowDefinition Height="180" />
         </Grid.RowDefinitions>
 
+        <MediaElement Volume="0.7" IsMuted="{Binding ElementName=bgm, Path=IsChecked}">
+            <MediaElement.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <MediaTimeline Source="https://ys.mihoyo.com/main/_nuxt/medias/video-bgm.d8637316.mp3" RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </MediaElement.Triggers>
+        </MediaElement>
+
         <!-- 背景图片 -->
         <Image Grid.RowSpan="2"
                d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/ab72edd8acc105904aa50da90e4e788e_2299455865599609620.jpg"
@@ -71,6 +83,62 @@
                 </EventTrigger>
             </Image.Triggers>
         </Image>
+
+        <!-- 音量按钮 -->
+        <ToggleButton x:Name="bgm"
+                      Margin="20"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Top"
+                      Panel.ZIndex="1"
+                      Foreground="#9FFF"
+                      IsChecked="True"
+                      Cursor="Hand">
+            <ToggleButton.Effect>
+                <BlurEffect Radius="1" />
+            </ToggleButton.Effect>
+            <ToggleButton.Template>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid>
+                        <Ellipse Width="25"
+                                 Height="25"
+                                 Stroke="{TemplateBinding Foreground}"
+                                 StrokeThickness="2" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="&#xEC4F;"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   RenderTransformOrigin="0.5,0.5"
+                                   Foreground="{TemplateBinding Foreground}">
+                            <TextBlock.RenderTransform>
+                                <RotateTransform Angle="-15" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                        <TextBlock x:Name="block"
+                                   Margin="0,0,4,5"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"
+                                   Visibility="Hidden"
+                                   Text="&#xF140;"
+                                   FontWeight="SemiBold"
+                                   FontSize="10"
+                                   Foreground="LightCoral"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   RenderTransformOrigin="0.5,0.5">
+                            <TextBlock.RenderTransform>
+                                <ScaleTransform ScaleX="-1" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="block" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </ToggleButton.Template>
+        </ToggleButton>
 
         <!-- 角色立绘 -->
         <Image Name="protraitPic"
