@@ -1,0 +1,270 @@
+﻿<Window x:Class="GenshinCharacterBrowser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GenshinCharacterBrowser"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:vm="clr-namespace:GenshinCharacterBrowser.ViewModels"
+        xmlns:model="clr-namespace:GenshinCharacterBrowser.Models"
+        Title="《原神》角色一览"
+        Width="1280"
+        Height="800"
+        Background="#222"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <Storyboard x:Key="protraitIn">
+            <DoubleAnimation Storyboard.TargetName="protraitPic"
+                             Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)"
+                             From="400"
+                             To="100"
+                             Duration="0:0:0.35" />
+            <DoubleAnimation Storyboard.TargetName="protraitPic"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0"
+                             To="1"
+                             Duration="0:0:0.35" />
+        </Storyboard>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="180" />
+        </Grid.RowDefinitions>
+
+        <!-- 背景图片 -->
+        <Image Grid.RowSpan="2"
+               d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/ab72edd8acc105904aa50da90e4e788e_2299455865599609620.jpg"
+               Source="{Binding BackgroundUrl}"
+               RenderTransformOrigin="0.5,0.5"
+               Stretch="UniformToFill">
+            <Image.RenderTransform>
+                <ScaleTransform />
+            </Image.RenderTransform>
+            <Image.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation RepeatBehavior="Forever"
+                                             AutoReverse="True"
+                                             Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                             From="1"
+                                             To="1.3"
+                                             Duration="0:0:30" />
+                            <DoubleAnimation RepeatBehavior="Forever"
+                                             AutoReverse="True"
+                                             Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                             From="1"
+                                             To="1.3"
+                                             Duration="0:0:30" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Image.Triggers>
+        </Image>
+
+        <!-- 角色立绘 -->
+        <Image Name="protraitPic"
+               Grid.RowSpan="2"
+               d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/19/a15445b2b2e4443398eabf3b479f49e7_8073097535789989508.png"
+               Source="{Binding SelectedItem.ProtraitUrl}"
+               Stretch="UniformToFill">
+            <Image.RenderTransform>
+                <TranslateTransform X="100" />
+            </Image.RenderTransform>
+        </Image>
+
+        <!-- 角色名称和元素 -->
+        <Grid Margin="200,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Image Height="300"
+                   HorizontalAlignment="Left"
+                   d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/b131cb7706e97d71ecf3d4f2965b0ff1_7476946874531800864.png"
+                   Source="{Binding SelectedItem.ElementUrl}"
+                   Opacity="0.25" />
+            <Image Height="120"
+                   Margin="50,0,0,0"
+                   HorizontalAlignment="Center"
+                   d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/4f3f7fc8cc5fce975bfff8d552e8e7b8_7543421952558259312.png"
+                   Source="{Binding SelectedItem.NameUrl}" />
+        </Grid>
+
+        <!-- 角色台词 -->
+        <Image Height="200"
+               Margin="200,0,0,-30"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/5ec15b13ccdf26bc05e6fdafdf57b0b2_3416441378250207025.png"
+               Source="{Binding SelectedItem.DialogueUrl}" />
+
+        <!-- 选择城市 -->
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+            <StackPanel.Resources>
+                <Style TargetType="RadioButton">
+                    <Setter Property="FontSize" Value="20" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Margin" Value="0,2" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="RadioButton">
+                                <Border Name="border"
+                                        Width="250"
+                                        Padding="20,18,0,18"
+                                        Background="Transparent">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Grid RenderTransformOrigin="0.5,0.5">
+                                            <Grid.RenderTransform>
+                                                <RotateTransform Angle="45" />
+                                            </Grid.RenderTransform>
+                                            <Grid.Effect>
+                                                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="White" />
+                                            </Grid.Effect>
+                                            <Rectangle Name="uncheckIcon"
+                                                       Width="6"
+                                                       Height="6"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Fill="{TemplateBinding Foreground}" />
+                                            <Grid Name="checkIcon" Visibility="Hidden">
+                                                <Rectangle Width="16"
+                                                           Height="16"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           Stroke="{TemplateBinding Foreground}"
+                                                           StrokeThickness="2" />
+                                                <Path HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Data="M0,0 9,0 9,9"
+                                                      Fill="{TemplateBinding Foreground}" />
+                                            </Grid>
+                                        </Grid>
+                                        <ContentPresenter Name="content" Margin="15,0,0,0" />
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="checkIcon" Property="Visibility" Value="Visible" />
+                                        <Setter TargetName="uncheckIcon" Property="Visibility" Value="Hidden" />
+                                        <Setter TargetName="content" Property="Margin" Value="25,0,0,0" />
+                                        <Setter TargetName="border" Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#9000" />
+                                                    <GradientStop Offset="1" Color="#0000" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </StackPanel.Resources>
+            <RadioButton Content="蒙德城"
+                         IsChecked="True"
+                         Command="{Binding LoadCityCommand}"
+                         CommandParameter="150" />
+            <RadioButton Content="璃月港" Command="{Binding LoadCityCommand}" CommandParameter="151" />
+            <RadioButton Content="稻妻城" Command="{Binding LoadCityCommand}" CommandParameter="324" />
+            <RadioButton Content="须弥城" Command="{Binding LoadCityCommand}" CommandParameter="350" />
+            <RadioButton Content="敬请期待" IsEnabled="False" />
+        </StackPanel>
+
+        <!-- 角色列表 -->
+        <ListBox x:Name="charListBox"
+                 Grid.Row="1"
+                 Padding="5"
+                 d:ItemsSource="{x:Null}"
+                 d:SelectedIndex="0"
+                 SelectedItem="{Binding SelectedItem}"
+                 BorderThickness="0"
+                 ScrollViewer.CanContentScroll="False"
+                 Background="#33f0f8ff"
+                 ItemsSource="{Binding CharList}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Visible">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource protraitIn}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border Name="border"
+                                        Margin="15,8"
+                                        Background="Transparent"
+                                        CornerRadius="5">
+                                    <StackPanel Margin="2,2,2,1">
+                                        <Border Name="iconBorder" Background="#5000" CornerRadius="4,4,0,0">
+                                            <Image Source="{Binding IconUrl}" Stretch="Uniform" />
+                                        </Border>
+                                        <Border Name="nameBorder"
+                                                Padding="0,1"
+                                                Background="#d000"
+                                                CornerRadius="0,0,4,4">
+                                            <TextBlock Name="nameText"
+                                                       HorizontalAlignment="Center"
+                                                       Foreground="White"
+                                                       Text="{Binding Name}"
+                                                       FontSize="16" />
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="White" />
+                                        <Setter TargetName="nameBorder" Property="Background" Value="Transparent" />
+                                        <Setter TargetName="nameText" Property="Foreground" Value="Black" />
+                                        <Setter TargetName="iconBorder" Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#111" />
+                                                    <GradientStop Offset="1" Color="#7000" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="White" />
+                                        <Setter TargetName="nameBorder" Property="Background" Value="Transparent" />
+                                        <Setter TargetName="nameText" Property="Foreground" Value="Black" />
+                                        <Setter TargetName="iconBorder" Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#111" />
+                                                    <GradientStop Offset="1" Color="#7000" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <d:ListBox.Items>
+                <model:Character Name="提纳里" IconUrl="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/1f88bdae2e99307e68a0bbfedf6cc74f_2882938237707913291.png" />
+                <model:Character Name="柯莱" IconUrl="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/3677cbc063b7ab3887ceb7f9a77287ac_1039229097287658400.png" />
+                <model:Character Name="多莉" IconUrl="https://webstatic.mihoyo.com/upload/contentweb/2022/08/29/b8a367991017a9f3c6bb445c5c8b68e6_1191967378101363412.png" />
+            </d:ListBox.Items>
+        </ListBox>
+    </Grid>
+</Window>
