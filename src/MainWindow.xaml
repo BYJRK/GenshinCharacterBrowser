@@ -112,6 +112,7 @@
                       HorizontalAlignment="Right"
                       VerticalAlignment="Top"
                       Panel.ZIndex="1"
+                      FocusVisualStyle="{x:Null}"
                       Foreground="#9FFF"
                       IsChecked="True"
                       Cursor="Hand">
@@ -203,6 +204,7 @@
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Margin" Value="0,2" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="RadioButton">
@@ -279,6 +281,7 @@
                  SelectedItem="{Binding SelectedItem}"
                  BorderThickness="0"
                  ScrollViewer.CanContentScroll="False"
+                 FocusVisualStyle="{x:Null}"
                  Background="#33f0f8ff"
                  ItemsSource="{Binding CharList}"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
