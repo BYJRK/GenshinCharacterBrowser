@@ -1,12 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GenshinCharacterBrowser.Helpers;
 using GenshinCharacterBrowser.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace GenshinCharacterBrowser.ViewModels;
 
@@ -19,24 +20,12 @@ public partial class MainWindowViewModel : ObservableObject
     Character selectedItem;
 
     [ObservableProperty]
-    string backgroundUrl;
-
-    [RelayCommand]
-    async Task Loaded()
-    {
-        await LoadCity("150");
-    }
+    BitmapImage backgroundImage;
 
     [RelayCommand]
     async Task LoadCity(string id)
     {
-        var client = new HttpClient();
-        var request = new HttpRequestMessage();
-        request.RequestUri = new Uri($"https://content-static.mihoyo.com/content/ysCn/getContentList?pageSize=20&pageNum=1&order=asc&channelId={id}");
-        request.Method = HttpMethod.Get;
-
-        var response = await client.SendAsync(request);
-        var result = await response.Content.ReadAsStringAsync();
+        var result = await HttpHelper.GetStringAsync($"https://content-static.mihoyo.com/content/ysCn/getContentList?pageSize=20&pageNum=1&order=asc&channelId={id}");
 
         var list = JObject.Parse(result)["data"]["list"];
 
@@ -56,25 +45,22 @@ public partial class MainWindowViewModel : ObservableObject
 
         SelectedItem = CharList[0];
 
-        ChangeBg(id);
+        await ChangeBg(id);
     }
 
-    void ChangeBg(string id)
+    async Task ChangeBg(string id)
     {
-        switch (id)
+        var backgroundUrl = id switch
         {
-            case "150":
-                BackgroundUrl = @"https://uploadstatic.mihoyo.com/contentweb/20200211/2020021114220951905.jpg";
-                break;
-            case "151":
-                BackgroundUrl = @"https://uploadstatic.mihoyo.com/contentweb/20200515/2020051511073340128.jpg";
-                break;
-            case "324":
-                BackgroundUrl = @"https://uploadstatic.mihoyo.com/contentweb/20210719/2021071917030766463.jpg";
-                break;
-            case "350":
-                BackgroundUrl = @"https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/04d542b08cdee91e5dabfa0e85b8995e_8653892990016707198.jpg";
-                break;
-        }
+            "150" => @"https://uploadstatic.mihoyo.com/contentweb/20200211/2020021114220951905.jpg",
+            "151" => @"https://uploadstatic.mihoyo.com/contentweb/20200515/2020051511073340128.jpg",
+            "324" => @"https://uploadstatic.mihoyo.com/contentweb/20210719/2021071917030766463.jpg",
+            "350" => @"https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/04d542b08cdee91e5dabfa0e85b8995e_8653892990016707198.jpg",
+            _ => throw new ArgumentException(id)
+        };
+
+        var image = await HttpHelper.GetImageAsync(backgroundUrl);
+
+        BackgroundImage = image;
     }
 }
