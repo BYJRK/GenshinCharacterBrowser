@@ -8,6 +8,8 @@ namespace GenshinCharacterBrowser.Helpers;
 
 public static class HttpHelper
 {
+    private static HttpClient httpClient = new();
+
     /// <summary>
     /// Get an http response from sending request to a specific url
     /// </summary>
@@ -16,13 +18,12 @@ public static class HttpHelper
     /// <returns></returns>
     public static async Task<HttpResponseMessage> GetResponseAsync(string url, HttpMethod method = null)
     {
-        using var client = new HttpClient();
         using var request = new HttpRequestMessage
         {
             RequestUri = new Uri(url),
             Method = method ?? HttpMethod.Get
         };
-        var response = await client.SendAsync(request);
+        var response = await httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
         return response;
     }
