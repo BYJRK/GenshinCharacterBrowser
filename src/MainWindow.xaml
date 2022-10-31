@@ -78,8 +78,7 @@
                     </BeginStoryboard>
                 </EventTrigger>
             </Grid.Triggers>
-            <Image d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/ab72edd8acc105904aa50da90e4e788e_2299455865599609620.jpg" Source="{Binding DuskImage}" Stretch="UniformToFill">
-            </Image>
+            <Image d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/ab72edd8acc105904aa50da90e4e788e_2299455865599609620.jpg" Source="{Binding DuskImage}" Stretch="UniformToFill" />
 
             <Image Grid.RowSpan="2"
                    d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/04d542b08cdee91e5dabfa0e85b8995e_8653892990016707198.jpg"
@@ -306,7 +305,14 @@
                                         CornerRadius="5">
                                     <StackPanel Margin="2,2,2,1">
                                         <Border Name="iconBorder" Background="#5000" CornerRadius="4,4,0,0">
-                                            <Image Source="{Binding IconUrl}" Stretch="Uniform" />
+                                            <Grid>
+                                                <Border Name="mask" CornerRadius="4,4,0,0" Background="White" />
+                                                <Image Source="{Binding IconUrl}" Stretch="Uniform">
+                                                    <Image.OpacityMask>
+                                                        <VisualBrush Visual="{Binding ElementName=mask}" />
+                                                    </Image.OpacityMask>
+                                                </Image>
+                                            </Grid>
                                         </Border>
                                         <Border Name="nameBorder"
                                                 Padding="0,1"
