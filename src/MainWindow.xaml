@@ -24,7 +24,11 @@
                              Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)"
                              From="400"
                              To="100"
-                             Duration="0:0:0.35" />
+                             Duration="0:0:0.35">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="protraitPic"
                              Storyboard.TargetProperty="Opacity"
                              From="0"
@@ -80,6 +84,7 @@
                     </BeginStoryboard>
                 </EventTrigger>
             </Grid.Triggers>
+
             <Image d:Source="https://webstatic.mihoyo.com/upload/contentweb/2022/08/15/ab72edd8acc105904aa50da90e4e788e_2299455865599609620.jpg" Source="{Binding DuskImage}" Stretch="UniformToFill" />
 
             <Image Grid.RowSpan="2"
@@ -96,8 +101,8 @@
                                                                Storyboard.TargetProperty="Opacity"
                                                                Duration="0:0:20">
                                     <LinearDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-                                    <LinearDoubleKeyFrame KeyTime="0:0:8" Value="1" />
-                                    <LinearDoubleKeyFrame KeyTime="0:0:12" Value="0" />
+                                    <LinearDoubleKeyFrame KeyTime="0:0:9" Value="1" />
+                                    <LinearDoubleKeyFrame KeyTime="0:0:11" Value="0" />
                                     <LinearDoubleKeyFrame KeyTime="0:0:20" Value="0" />
                                 </DoubleAnimationUsingKeyFrames>
                             </Storyboard>
@@ -308,10 +313,16 @@
                                     <StackPanel Margin="2,2,2,1">
                                         <Border Name="iconBorder" Background="#5000" CornerRadius="4,4,0,0">
                                             <Grid>
-                                                <Border Name="mask" CornerRadius="4,4,0,0" Background="White" />
                                                 <Image Source="{Binding IconUrl}" Stretch="Uniform">
                                                     <Image.OpacityMask>
-                                                        <VisualBrush Visual="{Binding ElementName=mask}" />
+                                                        <VisualBrush>
+                                                            <VisualBrush.Visual>
+                                                                <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
+                                                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                                                                        CornerRadius="4,4,0,0"
+                                                                        Background="White" />
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
                                                     </Image.OpacityMask>
                                                 </Image>
                                             </Grid>
