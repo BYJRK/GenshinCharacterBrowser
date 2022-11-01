@@ -281,7 +281,8 @@
         <!-- 角色列表 -->
         <ListBox x:Name="charListBox"
                  Grid.Row="1"
-                 Padding="5"
+                 Margin="-1"
+                 Padding="5,5,5,2"
                  d:ItemsSource="{x:Null}"
                  d:SelectedIndex="0"
                  SelectedItem="{Binding SelectedItem}"
@@ -290,7 +291,57 @@
                  FocusVisualStyle="{x:Null}"
                  Background="#33f0f8ff"
                  ItemsSource="{Binding CharList}"
+                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+            <ListBox.Resources>
+                <Style TargetType="ScrollBar">
+                    <Setter Property="Margin" Value="18,0,18,8" />
+                    <Setter Property="Height" Value="Auto" />
+                    <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
+                    <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+                    <Setter Property="Foreground" Value="#7000" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid SnapsToDevicePixels="true">
+                                    <Track x:Name="PART_Track" Grid.Column="1" IsEnabled="{TemplateBinding IsMouseOver}">
+                                        <Track.Thumb>
+                                            <Thumb>
+                                                <Thumb.Style>
+                                                    <Style TargetType="{x:Type Thumb}">
+                                                        <Setter Property="OverridesDefaultStyle" Value="true" />
+                                                        <Setter Property="IsTabStop" Value="false" />
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                                                    <Rectangle Width="{TemplateBinding Width}"
+                                                                               Height="{TemplateBinding Height}"
+                                                                               Fill="{TemplateBinding Foreground}"
+                                                                               RadiusX="10"
+                                                                               RadiusY="10"
+                                                                               SnapsToDevicePixels="True" />
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="true">
+                                                                            <Setter Property="Foreground" Value="#9000" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsDragging" Value="true">
+                                                                            <Setter Property="Foreground" Value="#9000" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Thumb.Style>
+                                            </Thumb>
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.Resources>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource protraitIn}" />
@@ -301,72 +352,77 @@
                     <StackPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Name="border"
+                            Margin="15,8"
+                            Background="Transparent"
+                            CornerRadius="5">
+                        <StackPanel Margin="2,2,2,1">
+                            <Border Name="iconBorder" Background="#5000" CornerRadius="4,4,0,0">
+                                <Grid>
+                                    <Image Source="{Binding IconUrl}" Stretch="Uniform">
+                                        <Image.OpacityMask>
+                                            <VisualBrush>
+                                                <VisualBrush.Visual>
+                                                    <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
+                                                            Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                                                            CornerRadius="4,4,0,0"
+                                                            Background="White" />
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Image.OpacityMask>
+                                    </Image>
+                                </Grid>
+                            </Border>
+                            <Border Name="nameBorder"
+                                    Padding="0,1"
+                                    Background="#d000"
+                                    CornerRadius="0,0,4,4">
+                                <TextBlock Name="nameText"
+                                           HorizontalAlignment="Center"
+                                           Foreground="White"
+                                           Text="{Binding Name}"
+                                           FontSize="16" />
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="White" />
+                            <Setter TargetName="nameBorder" Property="Background" Value="Transparent" />
+                            <Setter TargetName="nameText" Property="Foreground" Value="Black" />
+                            <Setter TargetName="iconBorder" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#111" />
+                                        <GradientStop Offset="1" Color="#7000" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <Trigger Property="FrameworkElement.IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="White" />
+                            <Setter TargetName="nameBorder" Property="Background" Value="Transparent" />
+                            <Setter TargetName="nameText" Property="Foreground" Value="Black" />
+                            <Setter TargetName="iconBorder" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#111" />
+                                        <GradientStop Offset="1" Color="#7000" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
-                                <Border Name="border"
-                                        Margin="15,8"
-                                        Background="Transparent"
-                                        CornerRadius="5">
-                                    <StackPanel Margin="2,2,2,1">
-                                        <Border Name="iconBorder" Background="#5000" CornerRadius="4,4,0,0">
-                                            <Grid>
-                                                <Image Source="{Binding IconUrl}" Stretch="Uniform">
-                                                    <Image.OpacityMask>
-                                                        <VisualBrush>
-                                                            <VisualBrush.Visual>
-                                                                <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
-                                                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                                                        CornerRadius="4,4,0,0"
-                                                                        Background="White" />
-                                                            </VisualBrush.Visual>
-                                                        </VisualBrush>
-                                                    </Image.OpacityMask>
-                                                </Image>
-                                            </Grid>
-                                        </Border>
-                                        <Border Name="nameBorder"
-                                                Padding="0,1"
-                                                Background="#d000"
-                                                CornerRadius="0,0,4,4">
-                                            <TextBlock Name="nameText"
-                                                       HorizontalAlignment="Center"
-                                                       Foreground="White"
-                                                       Text="{Binding Name}"
-                                                       FontSize="16" />
-                                        </Border>
-                                    </StackPanel>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="border" Property="Background" Value="White" />
-                                        <Setter TargetName="nameBorder" Property="Background" Value="Transparent" />
-                                        <Setter TargetName="nameText" Property="Foreground" Value="Black" />
-                                        <Setter TargetName="iconBorder" Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="#111" />
-                                                    <GradientStop Offset="1" Color="#7000" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="border" Property="Background" Value="White" />
-                                        <Setter TargetName="nameBorder" Property="Background" Value="Transparent" />
-                                        <Setter TargetName="nameText" Property="Foreground" Value="Black" />
-                                        <Setter TargetName="iconBorder" Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="#111" />
-                                                    <GradientStop Offset="1" Color="#7000" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
+                                <ContentPresenter />
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
