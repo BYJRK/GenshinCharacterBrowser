@@ -36,6 +36,7 @@ public static class HttpHelper
     public static async Task<string> GetStringAsync(string url)
     {
         using var response = await GetResponseAsync(url);
+        response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
 

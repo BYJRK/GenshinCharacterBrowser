@@ -1,12 +1,13 @@
-﻿<Window x:Class="GenshinCharacterBrowser.MainWindow"
+﻿<Window x:Class="GenshinCharacterBrowser.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GenshinCharacterBrowser"
+        xmlns:local="clr-namespace:GenshinCharacterBrowser.Views"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:GenshinCharacterBrowser.ViewModels"
         xmlns:model="clr-namespace:GenshinCharacterBrowser.Models"
+        xmlns:vc="clr-namespace:GenshinCharacterBrowser.Converters"
         Title="《原神》角色一览"
         Width="1280"
         Height="800"
@@ -434,5 +435,9 @@
                 <model:Character Name="多莉" IconUrl="https://webstatic.mihoyo.com/upload/contentweb/2022/08/29/b8a367991017a9f3c6bb445c5c8b68e6_1191967378101363412.png" />
             </d:ListBox.Items>
         </ListBox>
+
+        <!-- 404 界面 -->
+        <local:ConnectionFailed Grid.RowSpan="2" Panel.ZIndex="999" Visibility="{Binding ConnectionFailed, Converter={vc:BoolToVisibilityConverter UseHidden=True}}" />
+
     </Grid>
 </Window>

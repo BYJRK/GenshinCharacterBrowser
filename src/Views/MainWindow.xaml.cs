@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace GenshinCharacterBrowser;
+namespace GenshinCharacterBrowser.Views;
 
 public partial class MainWindow : Window
 {

@@ -5,7 +5,7 @@ using GenshinCharacterBrowser.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -25,22 +25,36 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     BitmapImage duskImage;
 
+    [ObservableProperty]
+    bool connectionFailed;
+
+    string lastVisitedCity = null;
+
     [RelayCommand]
     async Task LoadCity(string id)
     {
-        var result = await HttpHelper.GetStringAsync($"https://content-static.mihoyo.com/content/ysCn/getContentList?pageSize=20&pageNum=1&order=asc&channelId={id}");
-
-        var list = JObject.Parse(result)["data"]["list"];
-
-        CharList.Clear();
-        foreach (var item in list)
+        lastVisitedCity = id;
+        try
         {
-            CharList.Add(new(item));
+            var result = await HttpHelper.GetStringAsync($"https://content-static.mihoyo.com/content/ysCn/getContentList?pageSize=20&pageNum=1&order=asc&channelId={id}");
+
+            var list = JObject.Parse(result)["data"]["list"];
+
+            CharList.Clear();
+            foreach (var item in list)
+            {
+                CharList.Add(new(item));
+            }
+
+            SelectedItem = CharList[0];
+
+            await ChangeBg(id);
         }
-
-        SelectedItem = CharList[0];
-
-        await ChangeBg(id);
+        catch (HttpRequestException)
+        {
+            ConnectionFailed = true;
+            return;
+        }
     }
 
     async Task ChangeBg(string id)
@@ -69,5 +83,13 @@ public partial class MainWindowViewModel : ObservableObject
 
         DawnImage = dawn.Result;
         DuskImage = dusk.Result;
+    }
+
+    [RelayCommand]
+    async Task RetryClick()
+    {
+        ConnectionFailed = false;
+
+        await LoadCity(lastVisitedCity);
     }
 }

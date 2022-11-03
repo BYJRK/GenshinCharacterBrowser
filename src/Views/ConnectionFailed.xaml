@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="GenshinCharacterBrowser.Views.ConnectionFailed"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:GenshinCharacterBrowser"
+             xmlns:vm="clr-namespace:GenshinCharacterBrowser.ViewModels"
+             d:DesignHeight="720"
+             d:DesignWidth="1280"
+             d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
+             Background="#393b40"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Rectangle Margin="10"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   Stroke="#595b5f"
+                   RadiusX="20"
+                   RadiusY="20"
+                   StrokeThickness="4" />
+        <Rectangle Margin="20"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   Stroke="#4c4e53"
+                   RadiusX="14"
+                   RadiusY="14"
+                   StrokeThickness="2" />
+
+        <StackPanel Width="360" VerticalAlignment="Center">
+            <Image Source="/Assets/404.png" />
+            <TextBlock Margin="0,28"
+                       Text="无法访问《原神》官网"
+                       Foreground="White"
+                       FontSize="32" />
+            <TextBlock TextAlignment="Center"
+                       Foreground="#757b87"
+                       FontSize="16"
+                       LineHeight="24">
+                <Run>可能跟温迪一起出游了吧</Run>
+                <LineBreak />
+                <Run>可能跟钟离一起尘世仙游了也说不定？</Run>
+                <LineBreak />
+                <Run>可能跟雷电将军一起进一心净土了也没准……</Run>
+            </TextBlock>
+            <Image Width="30" Margin="28" Source="/Assets/star.png" />
+            <Button Content="尝试重连 »" Command="{Binding RetryClickCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="Foreground" Value="#d7d8d9" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="FontSize" Value="20" />
+                        <Setter Property="Cursor" Value="Hand" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
