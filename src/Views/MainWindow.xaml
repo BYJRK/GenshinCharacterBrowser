@@ -362,7 +362,7 @@
                         <StackPanel Margin="2,2,2,1">
                             <Border Name="iconBorder" Background="#5000" CornerRadius="4,4,0,0">
                                 <Grid>
-                                    <Image Source="{Binding IconUrl}" Stretch="Uniform">
+                                    <Image Width="106" Source="{Binding IconUrl}" Stretch="Uniform">
                                         <Image.OpacityMask>
                                             <VisualBrush>
                                                 <VisualBrush.Visual>
