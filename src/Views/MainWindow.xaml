@@ -276,6 +276,7 @@
             <RadioButton Content="璃月港" Command="{Binding LoadCityCommand}" CommandParameter="151" />
             <RadioButton Content="稻妻城" Command="{Binding LoadCityCommand}" CommandParameter="324" />
             <RadioButton Content="须弥城" Command="{Binding LoadCityCommand}" CommandParameter="350" />
+            <RadioButton Content="枫丹廷" Command="{Binding LoadCityCommand}" CommandParameter="358" />
             <RadioButton Content="敬请期待" IsEnabled="False" />
         </StackPanel>
 
